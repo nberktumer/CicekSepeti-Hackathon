@@ -18,6 +18,6 @@ class ExampleInstrumentedTest {
     fun packageNameIsCorrect() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getTargetContext()
-        assertEquals("ai.migraine", appContext.packageName)
+        assertEquals("com.hackathon", appContext.packageName)
     }
 }
