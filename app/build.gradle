@@ -18,6 +18,8 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
+
     }
     buildTypes {
         release {
@@ -81,6 +83,8 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxjava:2.2.2'
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
     implementation 'io.reactivex.rxjava2:rxkotlin:2.2.0'
+
+    implementation 'com.google.maps.android:android-maps-utils:0.5'
 
     // optional - Test helpers
     // Testing dependencies

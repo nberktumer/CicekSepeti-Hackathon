@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Çiçek Servisi</string>
     <string name="errorOccurred">Hata Meydana Geldi</string>
     <string name="retry">Yeniden Dene</string>
     <string name="close">Kapat</string>
