@@ -1,5 +1,6 @@
 package com.hackathon.ui.home
 
+import com.canerkorkmaz.cicek.jobdistribution.model.SolutionPack
 import com.hackathon.data.error.ServerError
 import com.hackathon.di.ILogger
 import com.hackathon.di.module.SchedulersModule
@@ -14,15 +15,13 @@ class HomeViewModel(
         private val solverTask: SolverTask,
         schedulersModule: SchedulersModule
 ) : BaseViewModel(schedulersModule) {
-    val onProblemSolved = ObservableResult<Unit>()
+    val onProblemSolved = ObservableResult<SolutionPack>()
 
-    // Button Listeners
-    // Login Button Click listener
     fun solveProblem() {
         // Call login function with given values when login button is clicked
         subscribe(
                 event = onProblemSolved,
-                disposable = { solverTask.execute().single() },
+                disposable = { solverTask.execute() },
                 onSuccess = { it },
                 onError = { Err(ServerError(it.message ?: "Unknown Error")) }
         )

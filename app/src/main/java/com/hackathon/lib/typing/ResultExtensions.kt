@@ -16,3 +16,5 @@ fun <S, E> Result<Option<S>, E>.transpose(): Option<Result<S, E>> = when (this) 
         is Some -> Some(Ok(this.value.value))
     }
 }
+
+fun <T> T.ok(): Ok<T> = Ok(this)

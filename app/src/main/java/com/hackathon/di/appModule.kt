@@ -23,7 +23,7 @@ val appModule = module {
     factory { SchedulersModule() }
 
     // Use Cases
-    factory { SolverTask(get()) }
+    factory { SolverTask(get(), get()) }
 
     // View Models
     viewModel { HomeViewModel(get(), get(), get()) }

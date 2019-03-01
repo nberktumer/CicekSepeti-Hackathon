@@ -43,6 +43,8 @@ class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class), OnMapRea
         return dataBinding.root
     }
 
+
+
     override fun onMapReady(googleMap: GoogleMap?) {
         val sydney1 = LatLng(-33.852, 151.211)
         val sydney2 = LatLng(-33.852, 151.214)
