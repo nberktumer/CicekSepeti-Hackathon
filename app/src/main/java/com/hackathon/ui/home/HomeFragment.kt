@@ -4,13 +4,22 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
+import com.hackathon.R
 import com.hackathon.databinding.HomeFragmentBinding
 import com.hackathon.di.ILogger
+import com.hackathon.lib.builders.DialogBuilder
 import com.hackathon.ui.base.BaseFragment
 import org.koin.android.ext.android.inject
 
 
-class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class) {
+class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class), OnMapReadyCallback {
     private val logger: ILogger by inject()
     private lateinit var dataBinding: HomeFragmentBinding
 
@@ -23,36 +32,50 @@ class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class) {
 
         // Bind View Model to the layout
         dataBinding = HomeFragmentBinding.inflate(inflater, container, false)
-        dataBinding.setLifecycleOwner(this)
+        dataBinding.lifecycleOwner = this
 
-        // Bind text fields
-//        dataBinding.usernameEditText.bindWriteOnly(viewModel.username)
-//        dataBinding.passwordEditText.bindWriteOnly(viewModel.password)
+        val mapFragment = childFragmentManager.findFragmentById(R.id.mapView)
+                as SupportMapFragment
+        mapFragment.getMapAsync(this)
 
-        // Bind on click
-//        dataBinding.loginButton.setOnClickListener {
-//            viewModel.onLoginClick()
-//        }
-//        dataBinding.signupButton.setOnClickListener {
-//            this.navigate(HomeFragmentDirections.actionLoginFragmentToTosFragment())
-//        }
+        viewModel.solveProblem()
 
         return dataBinding.root
     }
 
-    /**
-     * Bind view model commands
-     */
-    override fun bindCommands() {
-        super.bindCommands()
+    override fun onMapReady(googleMap: GoogleMap?) {
+        val sydney1 = LatLng(-33.852, 151.211)
+        val sydney2 = LatLng(-33.852, 151.214)
+        val sydney3 = LatLng(-33.852, 151.217)
+        googleMap?.addMarker(MarkerOptions().position(sydney1)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+                .title("Marker in Sydney"))
+        googleMap?.addMarker(MarkerOptions().position(sydney2)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+                .title("Marker in Sydney"))
+        googleMap?.addMarker(MarkerOptions().position(sydney3)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
+                .title("Marker in Sydney"))
+        googleMap?.moveCamera(CameraUpdateFactory.newLatLng(sydney1))
 
-        // Example for loading
-        viewModel.onLoginFinished.runWhenFinished(this,
+        viewModel.onProblemSolved.runWhenFinished(this,
                 onSuccess = {
-                    // Do something
+                    dataBinding.progressLayout.visibility = View.GONE
                 },
-                onError = {
-                    // Do something
+                onError = { err ->
+                    DialogBuilder(requireContext()).let {
+                        it.title = err.parseError(requireContext()).first
+                        it.content = err.parseError(requireContext()).second
+                        it.cancelable = false
+                        it.positiveButton {
+                            this.content = getString(R.string.retry)
+                            this.onClick = { dialog, _ ->
+                                viewModel.solveProblem()
+                                dialog.dismiss()
+                            }
+                        }
+                        it.build()
+                    }.show()
                 })
     }
 }
